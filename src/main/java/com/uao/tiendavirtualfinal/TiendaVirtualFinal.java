@@ -4,6 +4,7 @@
 
 package com.uao.tiendavirtualfinal;
 
+import Vista.Contenedor; 
 /**
  *
  * @author Nicolas Castaño
@@ -11,6 +12,6 @@ package com.uao.tiendavirtualfinal;
 public class TiendaVirtualFinal {
 
     public static void main(String[] args) {
-        
+        new Contenedor().setVisible(true);
     }
 }
