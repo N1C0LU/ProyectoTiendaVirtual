@@ -17,6 +17,14 @@ public class Contenedor extends JFrame {
      */
     public Contenedor() {
         initComponents();
+        setTitle("Tienda Virtual");
+        setLocationRelativeTo(null);
+
+        // Cargar el JPanel por defecto
+        CatalogoGeneral panel = new CatalogoGeneral();
+        panelPrincipal.add(panel);
+        panelPrincipal.revalidate();
+    
     }
 
     /**

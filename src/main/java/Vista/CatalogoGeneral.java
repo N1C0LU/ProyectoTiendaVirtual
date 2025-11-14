@@ -14,13 +14,26 @@ import javax.swing.table.DefaultTableModel;
  */
 public class CatalogoGeneral extends javax.swing.JPanel {
     
+private Controlador controlador = new Controlador();
     /**
      * Creates new form CatalogoGeneral
      */
     public CatalogoGeneral() {
         initComponents();
+        
+        cargarLista();
+        
     }
+    
+    private void cargarLista() {
+    DefaultListModel<String> modelo = new DefaultListModel<>();
+    modelo.addElement("Comida");
+    modelo.addElement("Electrónico");
+    modelo.addElement("Ropa");
 
+    listaProductos.setModel(modelo);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -58,16 +71,16 @@ public class CatalogoGeneral extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(149, 149, 149)
-                        .addComponent(titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addComponent(cargar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(229, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(149, 149, 149)
+                        .addComponent(titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(204, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -84,6 +97,14 @@ public class CatalogoGeneral extends javax.swing.JPanel {
 
     private void cargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarActionPerformed
         // TODO add your handling code here:
+        ArrayList<Producto> productos = controlador.obtenerProductos();
+
+        DefaultListModel<String> modelo = new DefaultListModel<>();
+        for (Producto p : productos) {
+            modelo.addElement(p.toString());
+        }
+
+        listaProductos.setModel(modelo);
     }//GEN-LAST:event_cargarActionPerformed
 
 
