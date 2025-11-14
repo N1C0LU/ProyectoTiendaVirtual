@@ -8,6 +8,8 @@ package Modelo;
  *
  * @author Nicolas Castaño
  */
-public class Ropa {
-    
+public class Ropa extends Producto {
+    public Ropa(String nombre, double precio) {
+        super(nombre, precio);
+    }
 }
