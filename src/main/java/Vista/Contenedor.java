@@ -13,12 +13,11 @@ import javax.swing.DefaultListModel;
  *
  * @author Nicolas Castaño
  */
+
 public class Contenedor extends JFrame {
 
-    private DefaultListModel<String> modeloProductos;
-    private DefaultListModel<String> modeloCarrito;
-
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Contenedor.class.getName());
+    private DefaultListModel<Producto> modeloProductos;
+    private DefaultListModel<Producto> modeloCarrito;
 
     /**
      * Creates new form Contenedor
@@ -44,14 +43,14 @@ public class Contenedor extends JFrame {
         Controlador c = new Controlador();
 
         for (Producto p : c.obtenerProductos()) {
-            modeloProductos.addElement(p.toString());
+            modeloProductos.addElement(p);
         }
     }
 
     private void configurarListeners() {
 
         agregar.addActionListener(e -> {
-            String seleccionado = listaProductos.getSelectedValue();
+            Producto seleccionado = listaProductos.getSelectedValue();
             if (seleccionado != null) {
                 modeloCarrito.addElement(seleccionado);
                 actualizarTotal();
@@ -59,7 +58,7 @@ public class Contenedor extends JFrame {
         });
 
         quitar.addActionListener(e -> {
-            String seleccionado = listaCarrito.getSelectedValue();
+            Producto seleccionado = listaCarrito.getSelectedValue();
             if (seleccionado != null) {
                 modeloCarrito.removeElement(seleccionado);
                 actualizarTotal();
@@ -80,36 +79,18 @@ public class Contenedor extends JFrame {
             }
         });
 
-        verDetalles.addActionListener(e -> {
-            String seleccionado = listaProductos.getSelectedValue();
-            if (seleccionado != null) {
-                JOptionPane.showMessageDialog(this,
-                        "Información del producto:\n" + seleccionado,
-                        "Detalles",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
-            }
-        });
 
     }
 
     private void actualizarTotal() {
         int suma = 0;
         int tamaño = modeloCarrito.getSize();
+
         for (int i = 0; i < tamaño; i++) {
-
-            String item = modeloCarrito.getElementAt(i);
-
-            int posicionPeso = item.indexOf('$');
-            String numero = item.substring(posicionPeso + 1);
-
-            int precio = Integer.parseInt(numero);
-
-            suma += precio;
+            suma += modeloCarrito.get(i).getPrecio();
         }
 
         total.setText("Total a pagar: $" + suma + "   |   Items: " + tamaño);
-
     }
 
     /**
@@ -145,18 +126,9 @@ public class Contenedor extends JFrame {
         titulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         titulo.setText("CATÁLOGO DE PRODUCTOS");
 
-        listaProductos.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        listaProductos.setToolTipText("");
         jScrollPane1.setViewportView(listaProductos);
 
-        listaCarrito.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(listaCarrito);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -248,9 +220,9 @@ public class Contenedor extends JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(quitar, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -261,7 +233,7 @@ public class Contenedor extends JFrame {
                     .addComponent(verDetalles))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(total)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -290,32 +262,47 @@ public class Contenedor extends JFrame {
 
     private void verDetallesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verDetallesActionPerformed
         // TODO add your handling code here:
+        Producto seleccionado = listaProductos.getSelectedValue();
+        if (seleccionado != null) {
+
+            ImageIcon icon = new ImageIcon(
+                    getClass().getResource("/img/" + seleccionado.getImagen())
+            );
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    seleccionado.getNombre() + "\nPrecio: $" + seleccionado.getPrecio(),
+                    "Detalles",
+                    JOptionPane.INFORMATION_MESSAGE,
+                    icon
+            );
+        }
     }//GEN-LAST:event_verDetallesActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+     */
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
             }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Contenedor().setVisible(true));
+    } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+        ex.printStackTrace();
     }
+    //</editor-fold>
+
+    /* Create and display the form */
+    java.awt.EventQueue.invokeLater(() -> new Contenedor().setVisible(true));
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton agregar;
@@ -324,8 +311,8 @@ public class Contenedor extends JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton limpiar;
-    private javax.swing.JList<String> listaCarrito;
-    private javax.swing.JList<String> listaProductos;
+    private javax.swing.JList<Producto> listaCarrito;
+    private javax.swing.JList<Producto> listaProductos;
     private javax.swing.JPanel panelPrincipal;
     private javax.swing.JButton quitar;
     private javax.swing.JLabel titulo;
