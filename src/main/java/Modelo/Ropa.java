@@ -9,7 +9,7 @@ package Modelo;
  * @author Nicolas Castaño
  */
 public class Ropa extends Producto {
-    public Ropa(String nombre, double precio) {
+    public Ropa(String nombre, int precio) {
         super(nombre, precio);
     }
 }

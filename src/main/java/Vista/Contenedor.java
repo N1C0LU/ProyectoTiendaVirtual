@@ -4,27 +4,92 @@
  */
 package Vista;
 import javax.swing.*;
+import Modelo.Producto;
+import javax.swing.DefaultListModel;
 /**
  *
  * @author Nicolas Castaño
  */
 public class Contenedor extends JFrame {
     
+    private DefaultListModel<String> modeloProductos;
+    private DefaultListModel<String> modeloCarrito;
+    
+    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Contenedor.class.getName());
-   
+    
+  
     /**
      * Creates new form Contenedor
      */
     public Contenedor() {
         initComponents();
-        setTitle("Tienda Virtual");
-        setLocationRelativeTo(null);
-
-        // Cargar el JPanel por defecto
-        CatalogoGeneral panel = new CatalogoGeneral();
-        panelPrincipal.add(panel);
-        panelPrincipal.revalidate();
+        inicializarModelos();
+        cargarProductos();
+        configurarListeners();
+    }
     
+    private void inicializarModelos() {
+        modeloProductos = new DefaultListModel<>();
+        modeloCarrito = new DefaultListModel<>();
+
+        
+        listaProductos.setModel(modeloProductos);
+        listaCarrito.setModel(modeloCarrito);
+    }
+
+    
+    private void cargarProductos() {
+        modeloProductos.addElement("Comida - $12000");
+        modeloProductos.addElement("Electrónico - $85000");
+        modeloProductos.addElement("Ropa - $35000");
+        modeloProductos.addElement("Juguete - $18000");
+        modeloProductos.addElement("Accesorio - $9000");
+    }
+    
+    private void configurarListeners() {
+
+        agregar.addActionListener(e -> {
+            String seleccionado = listaProductos.getSelectedValue();
+            if (seleccionado != null) {
+                modeloCarrito.addElement(seleccionado);
+                 actualizarTotal();
+            }
+        });
+
+        quitar.addActionListener(e -> {
+            String seleccionado = listaCarrito.getSelectedValue();
+            if (seleccionado != null) {
+                modeloCarrito.removeElement(seleccionado);
+                actualizarTotal();
+            }
+        });
+
+        limpiar.addActionListener(e -> {
+            modeloCarrito.clear();
+            actualizarTotal();
+        });
+    }
+    
+    private void actualizarTotal() {
+        int suma = 0;
+        int tamaño = modeloCarrito.getSize();  
+        for (int i = 0; i < tamaño; i++) {
+
+        
+            String item = modeloCarrito.getElementAt(i);
+
+        
+            int posicionPeso = item.indexOf('$');
+            String numero = item.substring(posicionPeso + 1);
+
+       
+            int precio = Integer.parseInt(numero);
+
+            suma += precio;
+        }
+
+        total.setText("Total a pagar: $" + suma);
     }
 
     /**
@@ -37,40 +102,135 @@ public class Contenedor extends JFrame {
     private void initComponents() {
 
         panelPrincipal = new javax.swing.JPanel();
+        titulo = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listaProductos = new javax.swing.JList<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listaCarrito = new javax.swing.JList<>();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        agregar = new javax.swing.JButton();
+        quitar = new javax.swing.JButton();
+        limpiar = new javax.swing.JButton();
+        total = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        titulo.setText("Catálogo general");
+
+        listaProductos.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(listaProductos);
+
+        listaCarrito.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(listaCarrito);
+
+        jLabel1.setText("Productos Disponibles");
+
+        jLabel2.setText("Carrito");
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
         panelPrincipalLayout.setHorizontalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 388, Short.MAX_VALUE)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32))))
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addGap(193, 193, 193)
+                .addComponent(titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 288, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40))
         );
+
+        agregar.setText("Agregar producto");
+
+        quitar.setText("Quitar producto");
+        quitar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quitarActionPerformed(evt);
+            }
+        });
+
+        limpiar.setText("Limpiar carrito");
+
+        total.setText("Total a pagar: ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(agregar)
+                                .addGap(39, 39, 39)
+                                .addComponent(quitar)))
+                        .addGap(53, 53, 53)
+                        .addComponent(limpiar)))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(quitar)
+                    .addComponent(agregar)
+                    .addComponent(limpiar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addComponent(total)
+                .addGap(19, 19, 19))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void quitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_quitarActionPerformed
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -97,6 +257,17 @@ public class Contenedor extends JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton agregar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton limpiar;
+    private javax.swing.JList<String> listaCarrito;
+    private javax.swing.JList<String> listaProductos;
     private javax.swing.JPanel panelPrincipal;
+    private javax.swing.JButton quitar;
+    private javax.swing.JLabel titulo;
+    private javax.swing.JLabel total;
     // End of variables declaration//GEN-END:variables
 }
