@@ -9,7 +9,7 @@ package Modelo;
  * @author Nicolas Castaño
  */
 public class Comida extends Producto{
-    public Comida(String nombre, double precio) {
+    public Comida(String nombre, int precio) {
         super(nombre, precio);
     }
 }
