@@ -8,8 +8,8 @@ package Modelo;
  *
  * @author Nicolas Castaño
  */
-public class Comida extends Producto{
-    public Comida(String nombre, int precio) {
-        super(nombre, precio);
+public class Comida extends Producto {
+    public Comida(String nombre, int precio, String imagen) {
+        super(nombre, precio, imagen);
     }
 }

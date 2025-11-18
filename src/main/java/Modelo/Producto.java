@@ -9,12 +9,15 @@ package Modelo;
  * @author Nicolas Castaño
  */
 public class Producto {
-    private String nombre;
-    private int precio; 
 
-    public Producto(String nombre, int precio) {
+    private String nombre;
+    private int precio;
+    private String imagen;
+
+    public Producto(String nombre, int precio, String imagen) {
         this.nombre = nombre;
         this.precio = precio;
+        this.imagen = imagen;
     }
 
     public String getNombre() {
@@ -23,6 +26,10 @@ public class Producto {
 
     public int getPrecio() {
         return precio;
+    }
+
+    public String getImagen() {
+        return imagen;
     }
 
     @Override
