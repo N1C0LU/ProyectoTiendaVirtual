@@ -2,18 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 
-package com.uao.tiendavirtualfinal;
+    package com.uao.tiendavirtualfinal;
 
-import Vista.Contenedor; 
+    import Vista.VentanaPrincipal; 
 
-/**
- *
- * @author Nicolas Castaño
- */
-public class TiendaVirtualFinal {
+    /**
+     *
+     * @author Nicolas Castaño
+     */
+    public class TiendaVirtualFinal {
 
-    public static void main(String[] args) {
-        new Contenedor().setVisible(true);
-        
+        public static void main(String[] args) {
+            new VentanaPrincipal().setVisible(true);
+
+        }
     }
-}
