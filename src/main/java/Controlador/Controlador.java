@@ -7,7 +7,7 @@ import Modelo.*;
 import java.util.ArrayList;
 /**
  *
- * @author Nicolas Castaño
+ * @author Nicolas Castaño & Sebastian Charris Garzon
  */
 public class Controlador {
     public ArrayList<Producto> obtenerProductos() {
