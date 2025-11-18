@@ -25,10 +25,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
     
     public void mostrarPanel(javax.swing.JPanel panel) {
-    this.setContentPane(panel);
+    JPanel contenedor = new JPanel(new java.awt.GridBagLayout());
+    contenedor.add(panel);
+    this.setContentPane(contenedor);
     this.revalidate();
     this.repaint();
-    }
+}
         
     /**
      * This method is called from within the constructor to initialize the form.
@@ -42,6 +44,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelPrincipal = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(204, 255, 255));
+        setForeground(new java.awt.Color(204, 255, 255));
 
         panelPrincipal.setLayout(new java.awt.BorderLayout());
 
@@ -51,13 +55,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 711, Short.MAX_VALUE))
+                .addGap(0, 494, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 605, Short.MAX_VALUE))
+                .addGap(0, 499, Short.MAX_VALUE))
         );
 
         pack();
