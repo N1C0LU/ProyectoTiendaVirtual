@@ -3,15 +3,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
+
 import javax.swing.JPanel;
+
 /**
  *
- * @author Nicolas Castaño
+ * @author Nicolas Castaño & Sebastian Charris Garzon
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
     private JPanel content;
+
     /**
      * Creates new form VentanaPrincipal
      */
@@ -19,19 +22,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
 
-
-
         mostrarPanel(new Login(this));
     }
-    
+
     public void mostrarPanel(javax.swing.JPanel panel) {
-    JPanel contenedor = new JPanel(new java.awt.GridBagLayout());
-    contenedor.add(panel);
-    this.setContentPane(contenedor);
-    this.revalidate();
-    this.repaint();
-}
-        
+        this.setContentPane(panel);     
+        this.revalidate();              
+        this.repaint();                 
+        this.pack();                    
+        this.setLocationRelativeTo(null);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -66,7 +67,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     /**
      * @param args the command line arguments
      */
