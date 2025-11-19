@@ -3,25 +3,34 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Vista;
+import Controlador.Controlador;
 import javax.swing.JOptionPane;
 import javax.swing.*;
 /**
  *
- * @author Nicolas Castaño
+ * @author Nicolas Castaño & Sebastian Charris Garzon
  */
 public class Login extends javax.swing.JPanel {
     private VentanaPrincipal ventana;
-    /**
-     * Creates new form Login
-     */
+    private Controlador controlador;
     
     public Login(VentanaPrincipal ventana) {
         initComponents();
         this.ventana = ventana;
-
+        this.controlador = new Controlador();
 
         ingresar.addActionListener(e -> {
-        ventana.mostrarPanel(new ContenedorF(ventana));
+            String user = usuario.getText().trim();
+            String pass = new String(clave.getPassword());
+            
+            if (controlador.validarLogin(user, pass)) {
+                ventana.mostrarPanel(new ContenedorF(ventana));
+            } else {
+                JOptionPane.showMessageDialog(this, 
+                    "Usuario o contraseña inválidos\n(Usuario no vacío y contraseña mínimo 4 caracteres)", 
+                    "Error de Login", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
         });
     }
 
