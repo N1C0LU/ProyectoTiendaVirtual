@@ -4,27 +4,83 @@
  */
 package Vista;
 
+import Controlador.Controlador;
+import javax.swing.JOptionPane;
+
 /**
  *
- * @author Nicolas Castaño
+ * @author Nicolas Castaño & Sebastian Charris Garzon
  */
 public class DatosCompra extends javax.swing.JPanel {
     private VentanaPrincipal ventana;
-    /**
-     * Creates new form DatosCompra
-     */
+    private Controlador controlador;
+    
     public DatosCompra() {
         initComponents();
     }
     
-    public DatosCompra(VentanaPrincipal ventana) {
+    public DatosCompra(VentanaPrincipal ventana, Controlador controlador) {
         initComponents();
         this.ventana = ventana;
-
+        this.controlador = controlador;
 
         volver.addActionListener(e -> {
-        ventana.mostrarPanel(new ContenedorF(ventana));
+            ventana.mostrarPanel(new ContenedorF(ventana));
         });
+    }
+    
+    private void generarRecibo() {
+        String nombre = jTextArea1.getText().trim();
+        String apellidos = jTextArea2.getText().trim();
+        String telefono = jTextArea3.getText().trim();
+        String correo = jTextArea4.getText().trim();
+        String direccion = jTextArea5.getText().trim();
+        String tarjeta = jTextArea6.getText().trim();
+        
+        String errorValidacion = controlador.validarDatosCompra(
+            nombre, apellidos, telefono, correo, direccion, tarjeta
+        );
+        
+        if (errorValidacion != null) {
+            JOptionPane.showMessageDialog(this, errorValidacion, 
+                "Error en los datos", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        String recibo = controlador.generarRecibo(
+            nombre, apellidos, telefono, correo, direccion, tarjeta
+        );
+        
+        if (recibo != null) {
+            JOptionPane.showMessageDialog(this, recibo, 
+                "Recibo de Compra", JOptionPane.INFORMATION_MESSAGE);
+            
+            limpiarCampos();
+            
+            int opcion = JOptionPane.showConfirmDialog(this,
+                "¿Desea realizar otra compra?",
+                "Compra Exitosa",
+                JOptionPane.YES_NO_OPTION);
+            
+            if (opcion == JOptionPane.YES_OPTION) {
+                ventana.mostrarPanel(new ContenedorF(ventana));
+            } else {
+                System.exit(0);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "Error al procesar la compra. El carrito está vacío.",
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void limpiarCampos() {
+        jTextArea1.setText("");
+        jTextArea2.setText("");
+        jTextArea3.setText("");
+        jTextArea4.setText("");
+        jTextArea5.setText("");
+        jTextArea6.setText("");
     }
 
     /**
@@ -66,6 +122,11 @@ public class DatosCompra extends javax.swing.JPanel {
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Terminar Compra");
         jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Nombre:");
@@ -207,6 +268,11 @@ public class DatosCompra extends javax.swing.JPanel {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        generarRecibo();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
