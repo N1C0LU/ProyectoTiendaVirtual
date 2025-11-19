@@ -6,7 +6,7 @@ package Modelo;
 
 /**
  *
- * @author Nicolas Castaño
+ * @author Nicolas Castaño & Sebastian Charris Garzon
  */
 public class Comida extends Producto {
     public Comida(String nombre, int precio, String imagen) {
