@@ -8,77 +8,75 @@ import Modelo.Producto;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 /**
  *
- * @author Nicolas Castaño
+ * @author Nicolas Castaño & Sebastian Charris Garzon
  */
 public class ContenedorF extends javax.swing.JPanel {
     
     private DefaultListModel<Producto> modeloProductos;
     private DefaultListModel<Producto> modeloCarrito;
     private VentanaPrincipal ventana;
+    private Controlador controlador;
 
-    /**
-     * Creates new form ContenedorF
-     */
     public ContenedorF(VentanaPrincipal ventana) {
         initComponents();
         this.ventana = ventana;
+        this.controlador = new Controlador();
         
         inicializarModelos();
         cargarProductos();
         configurarListeners();
-
-
-        comprar.addActionListener(e -> {
-        ventana.mostrarPanel(new DatosCompra(ventana));
-        });
     }
     
     private void inicializarModelos() {
         modeloProductos = new DefaultListModel<>();
         modeloCarrito = new DefaultListModel<>();
-
         listaProductos.setModel(modeloProductos);
         listaCarrito.setModel(modeloCarrito);
     }
 
     private void cargarProductos() {
-        Controlador c = new Controlador();
-
-        for (Producto p : c.obtenerProductos()) {
+        for (Producto p : controlador.obtenerProductos()) {
             modeloProductos.addElement(p);
         }
     }
 
     private void configurarListeners() {
-
         agregar.addActionListener(e -> {
             Producto seleccionado = listaProductos.getSelectedValue();
             if (seleccionado != null) {
+                controlador.agregarAlCarrito(seleccionado);
                 modeloCarrito.addElement(seleccionado);
                 actualizarTotal();
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor seleccione un producto");
             }
         });
 
         quitar.addActionListener(e -> {
             Producto seleccionado = listaCarrito.getSelectedValue();
             if (seleccionado != null) {
+                controlador.quitarDelCarrito(seleccionado);
                 modeloCarrito.removeElement(seleccionado);
                 actualizarTotal();
+            } else {
+                JOptionPane.showMessageDialog(this, "Seleccione un producto del carrito para quitar");
             }
         });
 
         limpiar.addActionListener(e -> {
+            if (controlador.carritoVacio()) {
+                JOptionPane.showMessageDialog(this, "El carrito ya está vacío");
+                return;
+            }
+            
             int opcion = JOptionPane.showConfirmDialog(
-                    this,
-                    "¿Deseas limpiar el carrito?",
-                    "Confirmar",
+                    this, "¿Deseas limpiar el carrito?", "Confirmar",
                     JOptionPane.YES_NO_OPTION
             );
-
             if (opcion == JOptionPane.YES_OPTION) {
+                controlador.limpiarCarrito();
                 modeloCarrito.clear();
                 actualizarTotal();
             }
@@ -87,34 +85,48 @@ public class ContenedorF extends javax.swing.JPanel {
         verDetalles.addActionListener(e -> {
             Producto seleccionado = listaProductos.getSelectedValue();
             if (seleccionado != null) {
-
-                ImageIcon icon = new ImageIcon(
-                    getClass().getResource("/img/" + seleccionado.getImagen())
-                );
-
-                JOptionPane.showMessageDialog(
-                    this,
-                    seleccionado.getNombre() + "\nPrecio: $" + seleccionado.getPrecio(),
-                    "Detalles",
-                    JOptionPane.INFORMATION_MESSAGE,
-                    icon
-                );
+                try {
+                    ImageIcon icon = new ImageIcon(
+                        getClass().getResource("/img/" + seleccionado.getImagen())
+                    );
+                    JOptionPane.showMessageDialog(
+                        this,
+                        seleccionado.getNombre() + "\nPrecio: $" + seleccionado.getPrecio(),
+                        "Detalles del Producto",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        icon
+                    );
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        seleccionado.getNombre() + "\nPrecio: $" + seleccionado.getPrecio(),
+                        "Detalles del Producto",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Seleccione un producto para ver detalles");
             }
         });
 
-
+        comprar.addActionListener(e -> {
+            if (controlador.carritoVacio()) {
+                JOptionPane.showMessageDialog(this, 
+                    "El carrito está vacío. Agregue productos antes de comprar.",
+                    "Carrito Vacío",
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            ventana.mostrarPanel(new DatosCompra(ventana, controlador)); // PASAR CONTROLADOR
+        });
     }
     
     private void actualizarTotal() {
-        int suma = 0;
-        int tamaño = modeloCarrito.getSize();
-
-        for (int i = 0; i < tamaño; i++) {
-            suma += modeloCarrito.get(i).getPrecio();
-        }
-
-        total.setText("Total a pagar: $" + suma + "   |   Items: " + tamaño);
+        int totalPrecio = controlador.calcularTotal();
+        int items = controlador.obtenerCantidadItems();
+        total.setText("Total a pagar: $" + totalPrecio + "   |   Items: " + items);
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
